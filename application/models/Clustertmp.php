@@ -13,6 +13,7 @@ class Clustertmp extends Eloquent {
                             'c1',
                             'c2',
                             'c3',
+                            'jumlah_penderita',
                             'iterasi'];
     public $timestamps = false;
 }

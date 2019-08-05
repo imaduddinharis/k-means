@@ -35,15 +35,15 @@ class Dummy extends CI_Controller
 
         $getDataRand = array_rand(array_flip($arrData), 3);
 
-        //if centroid random
+        // if centroid random
         $getCentroidC1 = Province::where('id',$getDataRand[0])->get();
         $getCentroidC2 = Province::where('id',$getDataRand[1])->get();
         $getCentroidC3 = Province::where('id',$getDataRand[2])->get();
 
         //if centroid fixed
-        // $getCentroidC1 = Province::where('id', '109')->get();
-        // $getCentroidC2 = Province::where('id', '120')->get();
-        // $getCentroidC3 = Province::where('id', '126')->get();
+        // $getCentroidC1 = Province::where('id', '3')->get();
+        // $getCentroidC2 = Province::where('id', '10')->get();
+        // $getCentroidC3 = Province::where('id', '15')->get();
 
         foreach ($getAllData as $datas => $values):
             $d1 = $values->penderita;
@@ -403,6 +403,7 @@ class Dummy extends CI_Controller
                     'c2'        => number_format($c2d1x,2).' , '.number_format($c2d2x,2).' , '.number_format($c2d3x,2),
                     'c3'        => number_format($c3d1x,2).' , '.number_format($c3d2x,2).' , '.number_format($c3d3x,2),
                     'prov'      => $val['provinsi'],
+                    'jumlah_penderita'    => $val['jumlah_penderita'],
                     'cluster'   => $val['cluster'],
                     'iterasi'   => $jumlahIterasi
                 ));
@@ -509,8 +510,53 @@ class Dummy extends CI_Controller
 
         $data['getAll'] = $getAllData;
 
-        $data['identIterasi'] = Clustertmp::groupBy('iterasi')->get();
+        $data['identIterasi'] = Clustertmp::orderBy('iterasi','ASC')->groupBy('iterasi')->get();
+        $getDataGrafikC1 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','1')->sum('jumlah_penderita');        
+        $getDataGrafikC2 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','2')->sum('jumlah_penderita');        
+        $getDataGrafikC3 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','3')->sum('jumlah_penderita');        
+        $dataset = $getDataGrafikC1.','.$getDataGrafikC2.','.$getDataGrafikC3;
+        
+        $label1 = 'Cluster 1: ';$label2 = 'Cluster 2: ';$label3 = 'Cluster 3: ';
+        /*-------------------------------*/
+        if($getDataGrafikC1 < $getDataGrafikC2 && $getDataGrafikC1 < $getDataGrafikC3 && $getDataGrafikC2 < $getDataGrafikC3){
+            $label1.='rendah';
+            $label2.='sedang';
+            $label3.='tinggi';
+        }
+        if($getDataGrafikC1 < $getDataGrafikC2 && $getDataGrafikC1 < $getDataGrafikC3 && $getDataGrafikC2 > $getDataGrafikC3){
+            $label1.='rendah';
+            $label3.='sedang';
+            $label2.='tinggi';
+        }
+        /*-------------------------------*/
+        if($getDataGrafikC2 < $getDataGrafikC1 && $getDataGrafikC2 < $getDataGrafikC3 && $getDataGrafikC1 < $getDataGrafikC3){
+            $label2.='rendah';
+            $label1.='sedang';
+            $label3.='tinggi';
+        }
+        if($getDataGrafikC2 < $getDataGrafikC1 && $getDataGrafikC2 < $getDataGrafikC3 && $getDataGrafikC1 > $getDataGrafikC3){
+            $label2.='rendah';
+            $label3.='sedang';
+            $label1.='tinggi';
+        }
+        /*-------------------------------*/
+        if($getDataGrafikC3 < $getDataGrafikC1 && $getDataGrafikC3 < $getDataGrafikC2 && $getDataGrafikC1 < $getDataGrafikC2){
+            $label3.='rendah';
+            $label1.='sedang';
+            $label2.='tinggi';
+        }
+        if($getDataGrafikC3 < $getDataGrafikC1 && $getDataGrafikC3 < $getDataGrafikC2 && $getDataGrafikC1 > $getDataGrafikC2){
+            $label3.='rendah';
+            $label2.='sedang';
+            $label1.='tinggi';
+        }
+        
 
+
+        $data['label'] = "'".$label1."','".$label2."','".$label3."'";
+        
+        
+        $data['dataset'] = $dataset;
         $data['dataCluster'] = $allDataCluster;
         $data['dataClusterIterasi'] = $allDataClusterTemp;
         $this->load->view('index', $data);

@@ -206,7 +206,6 @@
             </div>
 
 
-
 <?php require_once('component/modal.php');?>
             
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -216,6 +215,11 @@
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+        <script src="<?=base_url()?>assets/Chart.bundle.js"></script>
+        <script src="<?=base_url()?>assets/Chart.bundle.min.js"></script>
+        <script src="<?=base_url()?>assets/Chart.js"></script>
+        <script src="<?=base_url()?>assets/Chart.min.js"></script>
+
         <script>
             $(document).ready(function() {
                 $('#example').DataTable();
@@ -231,6 +235,39 @@
                 });
             });
         </script>
-
+        <script>
+            //cart
+            var ctx = document.getElementById('grafikakhir').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [<?=$label?>],
+                    datasets: [{
+                        label: 'Jumlah Pengidap HIV',
+                        data: [<?=$dataset?>],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0)',
+                            'rgba(255, 99, 132, 0)',
+                            'rgba(255, 99, 132, 0)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        </script>
     </body>
 </html>
