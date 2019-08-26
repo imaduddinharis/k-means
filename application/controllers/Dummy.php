@@ -402,7 +402,7 @@ class Dummy extends CI_Controller
                     'c1'        => number_format($c1d1x,2).' , '.number_format($c1d2x,2).' , '.number_format($c1d3x,2),
                     'c2'        => number_format($c2d1x,2).' , '.number_format($c2d2x,2).' , '.number_format($c2d3x,2),
                     'c3'        => number_format($c3d1x,2).' , '.number_format($c3d2x,2).' , '.number_format($c3d3x,2),
-                    'prov'      => $val['provinsi'],
+                    'prov'      => $val['id'],
                     'jumlah_penderita'    => $val['jumlah_penderita'],
                     'cluster'   => $val['cluster'],
                     'iterasi'   => $jumlahIterasi
@@ -502,6 +502,9 @@ class Dummy extends CI_Controller
         /* end iterasi lanut */
         // var_dump('jumlah iterasi: '.$jumlahIterasi);
         // return false;
+        if($jumlahIterasi < 3){
+            redirect(base_url());
+        }
 
         // return false;
         $data['centroid1'] = $getCentroidC1;
@@ -512,8 +515,14 @@ class Dummy extends CI_Controller
 
         $data['identIterasi'] = Clustertmp::orderBy('iterasi','ASC')->groupBy('iterasi')->get();
         $getDataGrafikC1 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','1')->sum('jumlah_penderita');        
+        $countC1 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','1')->count();
         $getDataGrafikC2 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','2')->sum('jumlah_penderita');        
+        $countC2 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','2')->count();
         $getDataGrafikC3 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','3')->sum('jumlah_penderita');        
+        $countC3 = Clustertmp::where('iterasi',$jumlahIterasi)->where('cluster','3')->count();
+        $getDataGrafikC1 = intVal($getDataGrafikC1/$countC1);
+        $getDataGrafikC2 = intVal($getDataGrafikC2/$countC2);
+        $getDataGrafikC3 = intVal($getDataGrafikC3/$countC3);
         $dataset = $getDataGrafikC1.','.$getDataGrafikC2.','.$getDataGrafikC3;
         
         $label1 = 'Cluster 1: ';$label2 = 'Cluster 2: ';$label3 = 'Cluster 3: ';
@@ -594,6 +603,10 @@ class Dummy extends CI_Controller
                $dataexcel[$i - 1]['penderita'] = $data['cells'][$i+1][4];
                $dataexcel[$i - 1]['hidup'] = $data['cells'][$i+1][5];
                $dataexcel[$i - 1]['mati'] = $data['cells'][$i+1][6];
+               $dataexcel[$i - 1]['luas_wilayah'] = $data['cells'][$i+1][7];
+               $dataexcel[$i - 1]['jumlah_penduduk'] = $data['cells'][$i+1][8];
+               $dataexcel[$i - 1]['jumlah_kelurahan'] = $data['cells'][$i+1][9];
+               $dataexcel[$i - 1]['jumlah_layanan_kesehatan'] = $data['cells'][$i+1][10];
           }
           //load model
           $this->load->model('Data_model');

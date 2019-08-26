@@ -15,7 +15,11 @@ class Data_model extends CI_Model {
                 'wilayah' => $dataarray[$i]['wilayah'],
                 'penderita' => $dataarray[$i]['penderita'],
                 'hidup' => $dataarray[$i]['hidup'],
-                'mati' => $dataarray[$i]['mati']
+                'mati' => $dataarray[$i]['mati'],
+                'luas_wilayah' => $dataarray[$i]['luas_wilayah'],
+                'jumlah_penduduk' => $dataarray[$i]['jumlah_penduduk'],
+                'jumlah_kelurahan' => $dataarray[$i]['jumlah_kelurahan'],
+                'jumlah_layanan_kesehatan' => $dataarray[$i]['jumlah_layanan_kesehatan']
             );
             //ini untuk menambahkan apakah dalam tabel sudah ada data yang sama
             //apabila data sudah ada maka data di-skip

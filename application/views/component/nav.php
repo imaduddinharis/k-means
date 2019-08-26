@@ -38,4 +38,17 @@
 		>
 	</li>
 	<?php endforeach;?>
+	<li class="nav-item">
+		<a
+			class="nav-link"
+			id="result-tab"
+			data-toggle="tab"
+			href="#result"
+			role="tab"
+			aria-controls="contact"
+			aria-selected="false"
+			>Result
+			</a
+		>
+	</li>
 </ul>
